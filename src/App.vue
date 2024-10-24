@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useCanvas from './hooks/useCanvas'
+import usePolygonPlayground from './hooks/usePolygonPlayground'
 
 // type TState = 'draw' | 'drag'
 
@@ -7,7 +7,7 @@ const canvasEl = ref<HTMLCanvasElement>()
 
 // const state = ref<TState>('draw')
 
-useCanvas(canvasEl)
+usePolygonPlayground(canvasEl)
 
 // function handleDraw() {
 //   openDraw()
@@ -38,48 +38,18 @@ useCanvas(canvasEl)
         </svg>
       </a>
     </div>
-    <div class="w-full h-[calc(100vh-64px)] transparent-bg flex flex-col items-center justify-center">
-      <canvas ref="canvasEl" />
-      <!-- <div class="space-y-2">
-        <div class="space-x-2 text-gray-500">
-          <button
-            :class="state === 'draw' ? 'bg-gray-50' : ''"
-            @click="handleDraw"
-          >
-            Draw
-          </button>
-          <button
-            :class="state === 'drag' ? 'bg-gray-50' : ''"
-            @click="handleAction"
-          >
-            Drag
-          </button>
-          <button @click="clear">
-            Clear
-          </button>
-        </div>
-        <div class="bg-white">
-          <canvas ref="canvasEl" />
-        </div>
-        <div class="text-right space-x-2">
-          <button @click="() => zoomOut()">
-            -
-          </button>
-          <span class="text-xs">{{ zoom / 1 * 100 }}%</span>
-          <button @click="() => zoomIn()">
-            +
-          </button>
-        </div>
-      </div> -->
+    <div class="w-full h-[calc(100vh-64px)] flex items-center justify-center">
+      <div class="flex-1 h-full transparent-bg">
+        <canvas ref="canvasEl" />
+      </div>
+      <div class="bg-white w-300px h-full border-l">
+        11
+      </div>
     </div>
   </div>
 </template>
 
 <style>
-button {
-  all: revert !important;
-}
-
 .transparent-bg {
   background-image: conic-gradient(#ccc 0 25%, #fff 25% 50%, #ccc 50% 75%, #fff 75%);
   background-size: 20px 20px;

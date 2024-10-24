@@ -24,6 +24,8 @@ export default function useCanvas(
 
   const canvas = ref<Canvas>()
 
+  const workspace = ref<Rect>()
+
   const points = reactive<IPoint[]>([])
 
   const currentPoint = reactive<{ circle: Circle | undefined, line: Line | undefined }>({
@@ -46,14 +48,19 @@ export default function useCanvas(
       selection: false,
     })
 
-    // const rect = new Rect({
-    //   left: (document.body.clientWidth - 800) / 2,
-    //   top: (document.body.clientHeight - 64 - 500) / 2,
-    //   width: 800,
-    //   height: 500,
-    //   fill: 'white',
-    //   selectable: false,
-    // })
+    workspace.value = new Rect({
+      left: canvas.value.width / 2,
+      top: canvas.value.height / 2,
+      width: 800,
+      height: 500,
+      fill: 'white',
+      selectable: false,
+      hasControls: false,
+      hoverCursor: 'default',
+    })
+
+    canvas.value.add(workspace.value)
+    canvas.value.sendObjectToBack(workspace.value)
 
     useResizeObserver(canvas.value.wrapperEl.parentElement, (entries) => {
       const entry = entries[0]
@@ -68,6 +75,21 @@ export default function useCanvas(
   onUnmounted(() => {
     canvas.value?.dispose()
   })
+
+  function createWorkSpace() {
+    const workspace = new Rect({
+      left: canvas.value!.width / 2,
+      top: canvas.value!.height / 2,
+      width: 800,
+      height: 500,
+      fill: 'white',
+      selectable: false,
+      hasControls: false,
+      hoverCursor: 'default',
+    })
+
+    return workspace
+  }
 
   function clear() {
     canvas.value?.clear()
@@ -97,8 +119,6 @@ export default function useCanvas(
       currentPoint.line = line
 
       canvas.value?.add(line)
-
-      canvas.value?.sendObjectToBack(line)
     }
 
     currentPoint.circle = circle
@@ -137,12 +157,12 @@ export default function useCanvas(
   }
 
   function openDraw() {
-    canvas.value?.on('mouse:down', createPoint)
-    canvas.value && (canvas.value.defaultCursor = 'default')
+    workspace.value?.on('mousedown', createPoint)
+    workspace.value && (workspace.value.hoverCursor = 'default')
   }
 
   function closeDraw() {
-    canvas.value?.off('mouse:down', createPoint)
+    workspace.value?.off('mousedown', createPoint)
   }
 
   function openAction() {
